@@ -33,7 +33,7 @@ def segThalamus():
     fLUT = open(args.ThLUT)
     LUT = fLUT.readlines()
     fLUT.close()
-    cleanLUT = [s for s in LUT if '-' in s and not '#' in s]
+    cleanLUT = [s for s in LUT if ('#' not in s) and ( s != '\n' )]
     # Obtain the labels of thalamic nuclei
     index  = [int(s.split()[0]) for s in cleanLUT if 8100<int(s.split()[0]) and int(s.split()[0])<8300]
     label  = [str(s.split()[1]) for s in cleanLUT if 8100<int(s.split()[0]) and int(s.split()[0])<8300]

@@ -38,12 +38,6 @@ export PERL5LIB=/opt/freesurfer/mni/lib/perl5/5.8.5
 export MNI_PERL5LIB=/opt/freesurfer/mni/lib/perl5/5.8.5
 export XAPPLRESDIR=/opt/freesurfer/MCRv84/X11/app-defaults
 export PATH=/opt/freesurfer/bin:/opt/freesurfer/fsfast/bin:/opt/freesurfer/tktools:/opt/freesurfer/mni/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-
-# Source FreeSurferEnv.sh then set subjects_dir
-/bin/bash -c 'source $FREESURFER_HOME/FreeSurferEnv.sh &>/dev/null'
-
-export SUBJECTS_DIR=/opt/freesurfer/subjects
-
 ###############################################################################
 # Configure paths
 
@@ -56,11 +50,16 @@ ANAT_DIR_3=${INPUT_DIR}/t1w_anatomical_3
 ANAT_DIR_4=${INPUT_DIR}/t1w_anatomical_4
 ANAT_DIR_5=${INPUT_DIR}/t1w_anatomical_5
 T2_DIR=${INPUT_DIR}/t2w_anatomical
-LICENSE_FILE=${FREESURFER_HOME}/.license
+LICENSE_FILE=${OUTPUT_DIR}/.license
 TEMPLATES=${FLYWHEEL_BASE}/templates
 MORI_DIR=${FLYWHEEL_BASE}/templates/MNI_JHU_tracts_ROIs
 FS_DIR=${OUTPUT_DIR}/fs
 ROIs_DIR=${OUTPUT_DIR}/fs/ROIs
+
+# Source FreeSurferEnv.sh then set subjects_dir
+/bin/bash -c 'source $FREESURFER_HOME/FreeSurferEnv.sh &>/dev/null'
+
+export SUBJECTS_DIR=${OUTPUT_DIR}
 
 ###############################################################################
 # Parse Configuration and Set Options
@@ -97,9 +96,9 @@ CEREBELLUM=`${FLYWHEEL_BASE}/parse_config.py --json_file=${CONFIG_FILE} -e`
 MORI=`${FLYWHEEL_BASE}/parse_config.py --json_file=${CONFIG_FILE} -m` 
 APARC2009=`${FLYWHEEL_BASE}/parse_config.py --json_file=${CONFIG_FILE} -aparc2009`
 # Make and link the subject's directory
-WORK_DIR=/"${SUBJECT_ID}"
-ln -sfn ${SUBJECTS_DIR}/"${SUBJECT_ID}" ${WORK_DIR}
-
+WORK_DIR=${OUTPUT_DIR}/"${SUBJECT_ID}"
+#ln -sfn ${SUBJECTS_DIR}/"${SUBJECT_ID}" ${WORK_DIR}
+export FS_LICENSE=${LICENSE_FILE}
 
 ###############################################################################
 # Check for anatomical NIfTI or DICOM archive
